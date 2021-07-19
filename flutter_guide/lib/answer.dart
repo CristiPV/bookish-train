@@ -1,10 +1,15 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 class Answer extends StatelessWidget {
   final String answerText;
   final VoidCallback answerCallback;
 
-  Answer(this.answerText, this.answerCallback);
+  Answer({
+    required this.answerText,
+    required this.answerCallback,
+  });
 
   @override
   Widget build(BuildContext context) {

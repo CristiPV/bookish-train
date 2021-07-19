@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import './quiz.dart';
-import './restart.dart';
+import './result.dart';
 
 // void main() {
 //   runApp(MyApp());
@@ -17,20 +17,31 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final questions = const [
+  final _questions = const [
     {
       "questionText": "Hello, what is age ?",
-      "answers": ["< 18", 18, "> 18", "I have no idea"],
+      "answers": [
+        {"text": "< 18", "score": 1},
+        {"text": 18, "score": 10},
+        {"text": "> 18", "score": 15},
+        {"text": "I have no idea", "score": 100},
+      ],
     },
     {
       "questionText": "Name, what is ?",
-      "answers": ["I was not given any name", "Garry", "Barry", "What ?"],
+      "answers": [
+        {"text": "I was not given any name", "score": 100},
+        {"text": "Garry", "score": 10},
+        {"text": "Barry", "score": 20},
+      ],
     },
   ];
 
   var _questionIndex = 0;
+  var _score = 0;
 
-  void _answerQuestion() {
+  void _answerQuestion(int answerScore) {
+    _score += answerScore;
     setState(() => _questionIndex++);
     print("Answer chosen!");
   }
@@ -42,10 +53,18 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: Text("Hello, I am title"),
         ),
-        body: _questionIndex < questions.length
-            ? Quiz(questions[_questionIndex]["questionText"] as String,
-                questions[_questionIndex]["answers"] as List, _answerQuestion)
-            : Restart(() => setState(() => _questionIndex = 0)),
+        body: _questionIndex < _questions.length
+            ? Quiz(
+                question: _questions[_questionIndex]["questionText"] as String,
+                answers: _questions[_questionIndex]["answers"] as List<Map<String, Object>>,
+                answerCallback: _answerQuestion)
+            : Result(
+                score: _score,
+                restartCallback: () {
+                  _score = 0;
+                  setState(() => _questionIndex = 0);
+                },
+              ),
       ),
     );
   }
