@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './question.dart';
-import './answer.dart';
+import './quiz.dart';
+import './restart.dart';
 
 // void main() {
 //   runApp(MyApp());
@@ -43,23 +43,9 @@ class _MyAppState extends State<MyApp> {
           title: Text("Hello, I am title"),
         ),
         body: _questionIndex < questions.length
-            ? Column(
-                children: [
-                  Question(questions[_questionIndex]["questionText"] as String),
-                  ...(questions[_questionIndex]["answers"] as List)
-                      .map((answer) {
-                    return Answer(answer.toString(), _answerQuestion);
-                  }).toList(),
-                ],
-              )
-            : Column(
-                children: [
-                  Question("Do you wish to Restart ?"),
-                  Answer("Restart", () {
-                    setState(() => _questionIndex = 0);
-                  }),
-                ],
-              ),
+            ? Quiz(questions[_questionIndex]["questionText"] as String,
+                questions[_questionIndex]["answers"] as List, _answerQuestion)
+            : Restart(() => setState(() => _questionIndex = 0)),
       ),
     );
   }
