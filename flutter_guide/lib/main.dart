@@ -42,14 +42,24 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: Text("Hello, I am title"),
         ),
-        body: Column(
-          children: [
-            Question(questions[_questionIndex]["questionText"] as String),
-            ...(questions[_questionIndex]["answers"] as List).map((answer) {
-              return Answer(answer.toString(), _answerQuestion);
-            }).toList(),
-          ],
-        ),
+        body: _questionIndex < questions.length
+            ? Column(
+                children: [
+                  Question(questions[_questionIndex]["questionText"] as String),
+                  ...(questions[_questionIndex]["answers"] as List)
+                      .map((answer) {
+                    return Answer(answer.toString(), _answerQuestion);
+                  }).toList(),
+                ],
+              )
+            : Column(
+                children: [
+                  Question("Do you wish to Restart ?"),
+                  Answer("Restart", () {
+                    setState(() => _questionIndex = 0);
+                  }),
+                ],
+              ),
       ),
     );
   }
