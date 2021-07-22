@@ -42,11 +42,9 @@ class TransactionList extends StatelessWidget {
                         color: Theme.of(context).accentColor,
                       ),
                     ),
-                    trailing: Text(
-                      "Delete Button",
-                      style: TextStyle(
-                        fontSize: 10,
-                      ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {},
                     ),
                   ),
                 );
