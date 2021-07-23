@@ -107,6 +107,37 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  List<Widget> _buildPortraitContent(
+      MediaQueryData mediaQuery, AppBar appBar, Widget list) {
+    return <Widget>[
+      Container(
+        height: (mediaQuery.size.height -
+                appBar.preferredSize.height -
+                mediaQuery.padding.top) *
+            0.3, // 0.3 - Portrait
+        width: double.infinity,
+        child: Chart(_recentTransactions),
+      ),
+      list,
+    ];
+  }
+
+  List<Widget> _buildLandscapeContent(
+      MediaQueryData mediaQuery, AppBar appBar, Widget list) {
+    return <Widget>[
+      _showChart
+          ? Container(
+              height: (mediaQuery.size.height -
+                      appBar.preferredSize.height -
+                      mediaQuery.padding.top) *
+                  0.7, // 0.3 - Portrait
+              width: double.infinity,
+              child: Chart(_recentTransactions),
+            )
+          : list,
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -149,27 +180,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       }),
                 ],
               ),
-            if (!isLandscape)
-              Container(
-                height: (mediaQuery.size.height -
-                        appBar.preferredSize.height -
-                        mediaQuery.padding.top) *
-                    0.3, // 0.3 - Portrait
-                width: double.infinity,
-                child: Chart(_recentTransactions),
-              ),
-            if (!isLandscape) transactionListWidget,
             if (isLandscape)
-              _showChart
-                  ? Container(
-                      height: (mediaQuery.size.height -
-                              appBar.preferredSize.height -
-                              mediaQuery.padding.top) *
-                          0.7, // 0.3 - Portrait
-                      width: double.infinity,
-                      child: Chart(_recentTransactions),
-                    )
-                  : transactionListWidget,
+              ..._buildLandscapeContent(
+                  mediaQuery, appBar, transactionListWidget),
+            if (!isLandscape)
+              ..._buildPortraitContent(
+                  mediaQuery, appBar, transactionListWidget),
           ],
         ),
       ),
