@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import './widgets/transaction_list.dart';
 import './widgets/transaction_form.dart';
 import './widgets/chart.dart';
 import './models/transaction.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  //  ! -- Enforce portrait mode -- !
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations(
+  //   [
+  //     DeviceOrientation.portraitDown,
+  //     DeviceOrientation.portraitUp,
+  //   ],
+  // );
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -36,38 +47,38 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transactions = [
-  //   Transaction(
-  //     id: "t1",
-  //     title: "New Laptop",
-  //     amount: 59.11,
-  //     date: DateTime.now().subtract(Duration(days: 1)),
-  //   ),
-  //   Transaction(
-  //     id: "t2",
-  //     title: "Groceries",
-  //     amount: 1.11,
-  //     date: DateTime.now().subtract(Duration(days: 8)),
-  //   ),
-  //   Transaction(
-  //     id: "t3",
-  //     title: "Horse",
-  //     amount: 100.11,
-  //     date: DateTime.now().subtract(Duration(days: 3)),
-  //   ),
-  //   Transaction(
-  //     id: "t4",
-  //     title: "Sofa",
-  //     amount: 20.11,
-  //     date: DateTime.now().subtract(Duration(days: 4)),
-  //   ),
+    Transaction(
+      id: "t1",
+      title: "New Laptop",
+      amount: 59.11,
+      date: DateTime.now().subtract(Duration(days: 1)),
+    ),
+    Transaction(
+      id: "t2",
+      title: "Groceries",
+      amount: 1.11,
+      date: DateTime.now().subtract(Duration(days: 8)),
+    ),
+    Transaction(
+      id: "t3",
+      title: "Horse",
+      amount: 100.11,
+      date: DateTime.now().subtract(Duration(days: 3)),
+    ),
+    Transaction(
+      id: "t4",
+      title: "Sofa",
+      amount: 20.11,
+      date: DateTime.now().subtract(Duration(days: 4)),
+    ),
   ];
+  bool _showChart = false;
 
   List<Transaction> get _recentTransactions {
     return _transactions.where((element) {
-      return element.date
-          .isAfter(DateTime.now().subtract(Duration(days: 7)));
+      return element.date.isAfter(DateTime.now().subtract(Duration(days: 7)));
     }).toList();
-  } 
+  }
 
   void _addTransaction(String title, double amount, DateTime date) {
     final newTransaction = Transaction(
@@ -90,26 +101,75 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  void _deleteTransaction(int index) {
+    setState(() {
+      _transactions.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
+    final appBar = AppBar(
+      title: Text('Personal Expenses'),
+      actions: <Widget>[
+        IconButton(
+          onPressed: () => _startAddTransaction(context),
+          icon: Icon(Icons.add),
+        ),
+      ],
+    );
+
+    final transactionListWidget = Container(
+      height: (MediaQuery.of(context).size.height -
+              appBar.preferredSize.height -
+              MediaQuery.of(context).padding.top) *
+          0.7, // 0.7 - Portrait
+      child: TransactionList(_transactions, _deleteTransaction),
+    );
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Personal Expenses'),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () => _startAddTransaction(context),
-            icon: Icon(Icons.add),
-          ),
-        ],
-      ),
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              width: double.infinity,
-              child: Chart(_recentTransactions),
-            ),
-            TransactionList(_transactions),
+            if (isLandscape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Show Chart"),
+                  Switch(
+                      value: _showChart,
+                      onChanged: (value) {
+                        setState(() {
+                          _showChart = value;
+                        });
+                      }),
+                ],
+              ),
+            if (!isLandscape)
+              Container(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.3, // 0.3 - Portrait
+                width: double.infinity,
+                child: Chart(_recentTransactions),
+              ),
+            if (!isLandscape) transactionListWidget,
+            if (isLandscape)
+              _showChart
+                  ? Container(
+                      height: (MediaQuery.of(context).size.height -
+                              appBar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          0.7, // 0.3 - Portrait
+                      width: double.infinity,
+                      child: Chart(_recentTransactions),
+                    )
+                  : transactionListWidget,
           ],
         ),
       ),
