@@ -52,58 +52,65 @@ class _TransactionFormState extends State<TransactionForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 6,
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          children: [
-            TextField(
-              decoration: InputDecoration(labelText: "Title"),
-              controller: titleController,
-              onSubmitted: (_) => _submitForm(),
-              //onChanged: (input) => titleInput = input,
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: "Amount"),
-              controller: amountController,
-              keyboardType: TextInputType.number,
-              onSubmitted: (_) => _submitForm(),
-              //onChanged: (input) => amountInput = input,
-            ),
-            Container(
-              height: 45,
-              margin: EdgeInsets.symmetric(horizontal: 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    !_inputDateChosen
-                        ? "No date chosen !"
-                        : "Picked date: ${DateFormat.yMMMEd().format(_inputDate)}",
-                    textAlign: TextAlign.left,
-                  ),
-                  TextButton(
-                    style: ButtonStyle(
-                      alignment: Alignment.centerRight,
-                      textStyle: MaterialStateProperty.all(
-                        TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).accentColor,
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 6,
+        child: Container(
+          padding: EdgeInsets.only(
+            left: 10,
+            right: 10,
+            top: 10,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+          ),
+          child: Column(
+            children: [
+              TextField(
+                decoration: InputDecoration(labelText: "Title"),
+                controller: titleController,
+                onSubmitted: (_) => _submitForm(),
+                //onChanged: (input) => titleInput = input,
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: "Amount"),
+                controller: amountController,
+                keyboardType: TextInputType.number,
+                onSubmitted: (_) => _submitForm(),
+                //onChanged: (input) => amountInput = input,
+              ),
+              Container(
+                height: 45,
+                margin: EdgeInsets.symmetric(horizontal: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      !_inputDateChosen
+                          ? "No date chosen !"
+                          : "Picked date: ${DateFormat.yMMMEd().format(_inputDate)}",
+                      textAlign: TextAlign.left,
+                    ),
+                    TextButton(
+                      style: ButtonStyle(
+                        alignment: Alignment.centerRight,
+                        textStyle: MaterialStateProperty.all(
+                          TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).accentColor,
+                          ),
                         ),
                       ),
+                      onPressed: _showDatePicker,
+                      child: Text("Choose Date !"),
                     ),
-                    onPressed: _showDatePicker,
-                    child: Text("Choose Date !"),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            ElevatedButton(
-              child: Text("Add Transaction"),
-              onPressed: _submitForm,
-            ),
-          ],
+              ElevatedButton(
+                child: Text("Add Transaction"),
+                onPressed: _submitForm,
+              ),
+            ],
+          ),
         ),
       ),
     );
