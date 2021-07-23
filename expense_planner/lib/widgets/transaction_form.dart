@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 class TransactionForm extends StatefulWidget {
   final Function _addTransaction;
 
-  TransactionForm(this._addTransaction);
+  const TransactionForm(this._addTransaction);
 
   @override
   _TransactionFormState createState() => _TransactionFormState();
@@ -100,13 +100,13 @@ class _TransactionFormState extends State<TransactionForm> {
                         ),
                       ),
                       onPressed: _showDatePicker,
-                      child: Text("Choose Date !"),
+                      child: const Text("Choose Date !"),
                     ),
                   ],
                 ),
               ),
               ElevatedButton(
-                child: Text("Add Transaction"),
+                child: const Text("Add Transaction"),
                 onPressed: _submitForm,
               ),
             ],
