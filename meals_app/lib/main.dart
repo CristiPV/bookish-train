@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import './screens/categories.dart';
 import './screens/meals.dart';
+import './screens/meal_detail.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,10 +25,16 @@ class MyApp extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
+              headline5: TextStyle(
+                fontFamily: "Raleway",
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
               bodyText1: TextStyle(
                 fontFamily: "Raleway",
                 fontSize: 17,
-                color: Colors.blueGrey.shade50,
+                color: Colors.black,
               ),
               bodyText2: TextStyle(
                 fontFamily: "Raleway",
@@ -40,7 +47,16 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (context) => CategoriesScreen(),
         MealsScreen.routeName: (context) => MealsScreen(),
-      }
+        MealDetailScreen.routeName: (context) => MealDetailScreen(),
+      },
+      onGenerateRoute: (settings) {
+        print(settings.arguments);
+        return MaterialPageRoute(builder: (context) => CategoriesScreen());
+      },
+      onUnknownRoute: (settings) {
+        print(settings.arguments);
+        return MaterialPageRoute(builder: (context) => CategoriesScreen());
+      },
     );
   }
 }
